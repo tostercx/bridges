@@ -57,6 +57,34 @@
 		<remove-file name="$sourcedir/WordpressUser.php" />
 		<remove-file name="$sourcedir/WordpressPassword.php" />
 	</uninstall>
+	
+	<install for="2.0.10">
+		<readme parsebbc="true">README</readme>
+		<require-file name="WordpressBridge.php" destination="$sourcedir">Install the core BlogBridger class</require-file>
+		<require-file name="WordpressUser.php" destination="$sourcedir">Install the BlogBridger User class</require-file>
+		<require-file name="WordpressPassword.php" destination="$sourcedir">Install the BlogBridger Password class</require-file>
+		<require-file name="WordpressBridge.english.php" destination="$languagedir">Language file with all language strings</require-file>
+		<require-file name="WordpressBridge.template.php" destination="$themedir">Template file for admin settings</require-file>
+		<code type="inline"><![CDATA[<?php
+			global $boarddir;
+			require_once($boarddir . '/SSI.php');
+			add_integration_function('integrate_pre_include', '$sourcedir/WordpressBridge.php');
+		]]></code>
+		<redirect type="inline" url="?action=admin;area=wordpress;sa=bridge" timeout="5000">Thank you for installing BlogBridger, you will now be redirected to the settings page.</redirect>
+	</install>
+
+	<uninstall for="2.0.10">
+		<code type="inline"><![CDATA[<?php
+			global $boarddir;
+			require_once($boarddir . '/SSI.php');
+			remove_integration_function('integrate_pre_include', '$sourcedir/WordpressBridge.php');
+		]]></code>
+		<remove-file name="$languagedir/WordpressBridge.english.php" />
+		<remove-file name="$themedir/WordpressBridge.template.php" />
+		<remove-file name="$sourcedir/WordpressBridge.php" />
+		<remove-file name="$sourcedir/WordpressUser.php" />
+		<remove-file name="$sourcedir/WordpressPassword.php" />
+	</uninstall>
 
 	<upgrade>
 		<readme parsebbc="true">README</readme>
