@@ -1,0 +1,8 @@
+version: 1.1.4.{build}
+shallow_clone: true
+
+build_script:
+  - cd SMF-Wordpress
+  - SET zip=SMF-Wordpress-%APPVEYOR_BUILD_VERSION%.zip
+  - 7z a %zip% *
+  - appveyor PushArtifact %zip%
