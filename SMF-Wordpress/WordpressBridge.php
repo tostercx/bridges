@@ -714,7 +714,7 @@ class WordpressBridge {
      * @param string $scheme What type of cookie are we creating?
      * @return string Cookie data
      */
-    private function createCookieData($expiration, $scheme) {
+    private function createCookieData($expiration, $scheme, $token = '') {
         $passPart = substr($this->wpUser->user_pass, 8, 4);
 
         switch ($scheme) {
@@ -730,14 +730,16 @@ class WordpressBridge {
                 $salt = $this->key_salts['logged_in_key'] . $this->key_salts['logged_in_salt'];
                 break;
         }
-
-        $firstPassData = $this->wpUser->user_login . $passPart . '|' . $expiration;
+        
+        $algo = function_exists( 'hash' ) ? 'sha256' : 'sha1';
+        
+        $firstPassData = $this->wpUser->user_login . $passPart . '|' . $expiration . '|' . $token;
         $firstPassHash = hash_hmac('md5', $firstPassData, $salt);
 
-        $secondPassData = $this->wpUser->user_login . '|' . $expiration;
-        $secondPassHash = hash_hmac('md5', $secondPassData, $firstPassHash);
+        $secondPassData = $this->wpUser->user_login . '|' . $expiration . '|' . $token;
+        $secondPassHash = hash_hmac($algo, $secondPassData, $firstPassHash);
 
-        $cookieData = $this->wpUser->user_login . '|' . $expiration . '|' . $secondPassHash;
+        $cookieData = $this->wpUser->user_login . '|' . $expiration . '|' . $token . '|' . $secondPassHash;
         return $cookieData;
     }
 
