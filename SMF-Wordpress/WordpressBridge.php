@@ -733,7 +733,7 @@ class WordpressBridge {
         
         $algo = function_exists( 'hash' ) ? 'sha256' : 'sha1';
         
-        $firstPassData = $this->wpUser->user_login . $passPart . '|' . $expiration . '|' . $token;
+        $firstPassData = $this->wpUser->user_login . '|' . $passPart . '|' . $expiration . '|' . $token;
         $firstPassHash = hash_hmac('md5', $firstPassData, $salt);
 
         $secondPassData = $this->wpUser->user_login . '|' . $expiration . '|' . $token;
